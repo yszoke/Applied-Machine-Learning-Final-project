@@ -8,7 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten, ZeroPadding2D
 from keras.layers import Convolution2D, MaxPooling2D, AveragePooling2D
 from keras.layers.normalization import BatchNormalization
-from keras.optimizers import SGD
+#from keras.optimizers import SGD
 from keras.utils import np_utils
 from keras.regularizers import l2
 
@@ -45,5 +45,11 @@ model.add(Activation('softmax'))
 
 # print model.to_yaml()
 with open('dnn.model', 'w') as f:
+    sys.stdout = f
+    print(model.to_yaml())
+
+
+# print model.to_yaml()
+with open('model_test.yaml', 'w') as f:
     sys.stdout = f
     print(model.to_yaml())

@@ -20,7 +20,11 @@ PRINTABLE_METRICS = ['accuracy_score',
                      'macro_precision_score',
                      'macro_recall_score',
                      'macro_f1_score',
-                     'calibration'
+                     'calibration',
+                     'FPR',
+                     'TPR',
+                     'AUC',
+                     'PR_Curve'
                      ]
 
 ADVERSARIAL_EPSILONS = [0.1, 0.01, 0.001]

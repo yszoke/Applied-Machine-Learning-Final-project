@@ -39,6 +39,11 @@ def eval_scores(y_true, y_pred, y_true_onehot=None, y_pred_onehot=None):
                 'macro_recall_score': sklearn.metrics.recall_score(y_true, y_pred, average="macro"),
                 'macro_f1_score': sklearn.metrics.f1_score(y_true, y_pred, average="macro"),
                 'confusion_matrix': sklearn.metrics.confusion_matrix(y_true, y_pred),
+                'FPR': sklearn.metrics.roc_curve(y_true, y_pred, pos_label=2)[0],
+                'TPR': sklearn.metrics.roc_curve(y_true, y_pred, pos_label=2)[1],
+                'AUC': sklearn.metrics.auc(sklearn.metrics.roc_curve(y_true, y_pred, pos_label=2)[0],
+                                           sklearn.metrics.roc_curve(y_true, y_pred, pos_label=2)[1]),
+                'PR_Curve': sklearn.metrics.roc_curve(y_true, y_pred, pos_label=2),
                 'y_true': y_true,
                 'y_pred' : y_pred,
     }

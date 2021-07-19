@@ -19,11 +19,12 @@ import math
 
 from pathlib import Path
 import numpy as np # type: ignore
+import pandas
 
 import tensorflow as tf # type: ignore
 from toupee.utils import dict_map
 
-KNOWN_DATA_TYPES = [".tfrecord", ".h5", ".npz"]
+KNOWN_DATA_TYPES = [".tfrecord", ".h5", ".npz", ".csv"]
 
 DEFAULT_TRAINING_FILE = 'train'
 DEFAULT_VALIDATION_FILE = 'valid'
@@ -38,7 +39,7 @@ def get_data_format(filename: str) -> str:
 
 def one_hot_numpy(dataset):
     """ Convert a numpy array of Y labels into one-hot encodings """
-    n_classes = dataset.max() + 1
+    n_classes = 100#dataset.max() + 1
     return np.eye(n_classes)[dataset.reshape(-1)]
 
 def _load_h5(filename, **kwargs):
@@ -51,10 +52,21 @@ def _load_npz(filename: str, **kwargs) -> tuple:
     """ Load a NPZ file """
     #TODO: transformations
     #TODO: special dict mappings
-    data = np.load(filename)
-    data = (data['x'],data['y'])
+    data1 = np.load(filename)
+    data = (data1['x'],data1['y'])
     if kwargs['convert_labels_to_one_hot']:
         data = (data[0], one_hot_numpy(data[1]))
+    return data
+
+
+def _load_csv(filename: str, **kwargs) -> tuple:
+    """ Load a CSV file """
+    data = pandas.read_csv(filename)
+    label = 'class'
+    # Split the data
+    X = data.loc[:, data.columns != label]
+    y = data[label]
+    data = X,y
     return data
 
 
@@ -68,7 +80,8 @@ def load(filename: str, **kwargs) -> tuple:
     """ Load any known data format """
     mapper = {'.h5': _load_h5,
               '.npz': _load_npz,
-              '.tfrecord': _load_tfrecord
+              '.tfrecord': _load_tfrecord,
+              '.csv': _load_csv
              }
     return mapper[get_data_format(filename)](filename, **kwargs)
 

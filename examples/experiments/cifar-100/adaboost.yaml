@@ -1,22 +1,28 @@
 ---
 ## MLP Parameters ##
 #dataset: /datasets/test_data/cifar10-th/
-dataset: ../cifar-100-new-loaded/
+dataset: ../datasets/cifar100/fold/ #../datasets/classification_datasets/test_data/ #../datasets/cifar100/
 data_format: npz
 convert_labels_to_one_hot: true
-model_file: examples/experiments/cifar-100/densenet121.model
+model_file: ../examples/experiments/cifar-100/densenet121.model
 reduce_lr_on_plateau:
   factor: 0.1
   patience: 5
   cooldown: 0
   min_lr: 0.0000001
 optimizer:
-  0:
-    class_name: Adam
-    config:
-      learning_rate:
-        0:  0.001
-        50: 0.0001
+#  0:
+#    class_name: Adam
+#    config:
+#      learning_rate:
+#        0:  0.001
+#        50: 0.0001
+   0:
+     class_name: Adam
+     config:
+       learning_rate:
+         0:  0.001
+         256: 0.0001
   #       30: 0.001
   #       50: 0.0001
   #       # 100: 0.0001
@@ -29,7 +35,7 @@ optimizer:
   #       250: 0.001
   #     momentum: 0.9
   #     decay: 0.0005
-epochs: 1
+epochs: 5
 batch_size: 128
 loss: categorical_crossentropy
 shuffle: true
@@ -51,7 +57,10 @@ img_gen_params:
 ensemble_method: 
   class_name: AdaBoost
   params:
-    size: 20
+    size: 5
+#    subsequent_epochs: 1
+#    insert_after: true
+#    new_layers: C:\Users\ortal\PycharmProjects\Applied-Machine-Learning-Final-project\examples\model_test.yaml
 
 ### BEST SO FAR:
 

@@ -96,6 +96,7 @@ class EnsembleMethod:
         """ Default callback when a model starts training """
         pass
 
+    #4
     def fit(self):
         """ Train all Ensemble members """
         logging.info("=== Training Ensemble ===")
@@ -250,6 +251,7 @@ class DIB(DynamicMembers):
     """
     Deep Incremental Boosting ()
     """
+    #3
     def __init__(self, subsequent_epochs, insert_after, new_layers, variant='M1', **kwargs):
         super().__init__(aggregator='averaging', **kwargs)
         self.subsequent_epochs = subsequent_epochs
@@ -276,6 +278,7 @@ class DIB(DynamicMembers):
             y_pred_weights = 1.
         errors = (y_true == y_pred).astype('int32')
         e = np.sum(errors * self.sample_weights * y_pred_weights)
+        alpha = 0
         if e > 0:
             alpha = .5 * math.log((1-e)/2) + math.log(self.data.n_classes-1)
             unnorm_weights = np.where(errors == 1,
