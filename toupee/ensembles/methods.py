@@ -231,6 +231,7 @@ class AdaBoost(Simple):
             y_pred_weights = 1.
         errors = (y_true == y_pred).astype('int32')
         e = np.sum(errors * self.sample_weights * y_pred_weights)
+        alpha = 0
         if e > 0:
             alpha = .5 * math.log((1-e)/2) + math.log(self.data.n_classes-1)
             unnorm_weights = np.where(errors == 1,

@@ -215,6 +215,7 @@ def main_npz_files():
     # divide data into 20 datasets
     X_shape = X.shape[0]
     array_size = int(X_shape/20)
+    dataset_num = 0
     for i in range(0, X_shape, array_size):
         start = i
         stop = i + array_size
@@ -222,8 +223,13 @@ def main_npz_files():
         X = X[start:stop]
         y = y[start:stop]
 
+        X_shape_inner = X.shape[0]
+
         # randomly select test data -> 20% test
-        idx = np.random.choice(X.shape[0], int(DATA_SIZE*0.2), replace=False)
+        if X_shape_inner <= 0 or int(X_shape_inner*0.2) <= 0:
+            break
+
+        idx = np.random.choice(X.shape[0], int(X.shape[0]*0.2), replace=False)
         X_test = X[idx]
         y_test = y[idx]
         X = np.delete(X, idx, axis=0)
@@ -274,7 +280,7 @@ def main_npz_files():
                 ensemble_metrics = cv_metrics['ensemble']
 
                 # write to csv
-                results.append({'acc': ensemble_metrics['accuracy_score'],
+                results = results.append({'acc': ensemble_metrics['accuracy_score'],
                                 'micro_precision': ensemble_metrics['micro_precision_score'],
                                 'micro_recall': ensemble_metrics['micro_recall_score'],
                                 'micro_f1': ensemble_metrics['micro_f1_score'],
@@ -289,7 +295,7 @@ def main_npz_files():
             except Exception as e:
                 # swallow errors
                 # write to csv
-                results.append({'acc': 0,
+                results = results.append({'acc': 0,
                                 'micro_precision': 0,
                                 'micro_recall': 0,
                                 'micro_f1': 0,
@@ -307,15 +313,15 @@ def main_npz_files():
                 print(e)
                 continue
 
-        dataset_num = int(X_shape/i)
         results.to_csv(f'results\\result_{algorithm_name}_{dataset_num}.csv')
+        dataset_num += 1
 
         # predict with best model and get results+weights ??
 
 
 def size_trial(trial):
     # We optimize the numbers of layers, their units and weight decay parameter.
-    return trial.suggest_int("ensemble_size", 2, 6, step=2)
+    return trial.suggest_int("ensemble_size", 2, 4, step=2)
 
 
 def optimizer_trial(trial):

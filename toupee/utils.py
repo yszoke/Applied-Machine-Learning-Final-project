@@ -48,7 +48,7 @@ def eval_scores(y_true, y_pred, y_true_onehot=None, y_pred_onehot=None):
                 'y_pred' : y_pred,
     }
     if y_true_onehot is not None and y_pred_onehot is not None:
-        scores['calibration'] = calibration(y_true_onehot, y_pred_onehot)
+        scores['calibration'] = 0 #calibration(y_true_onehot, y_pred_onehot)
     return scores
 
 
