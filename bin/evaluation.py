@@ -202,8 +202,8 @@ def main_npz_files():
     valid_data = _load_npz(DATA_PATH + r'\valid.npz')
 
     # combine the data into one numpy array
-    X = np.concatenate((test_data[0], train_data[0], valid_data[0]))
-    y = np.concatenate((test_data[1], train_data[1], valid_data[1]))
+    original_X = np.concatenate((test_data[0], train_data[0], valid_data[0]))
+    original_y = np.concatenate((test_data[1], train_data[1], valid_data[1]))
 
     # divide
 
@@ -213,15 +213,15 @@ def main_npz_files():
     # y = y[idx]
 
     # divide data into 20 datasets
-    X_shape = X.shape[0]
+    X_shape = original_X.shape[0]
     array_size = int(X_shape/20)
     dataset_num = 0
     for i in range(0, X_shape, array_size):
         start = i
         stop = i + array_size
 
-        X = X[start:stop]
-        y = y[start:stop]
+        X = original_X[start:stop]
+        y = original_y[start:stop]
 
         X_shape_inner = X.shape[0]
 
