@@ -25,6 +25,6 @@ def posthocs_test(adaboost_data, DIB_data, DIB2_data):
 
 if __name__ == '__main__':
     # for each algorithm and dataset->do friedman test:
-    friedman_test('results\\result_adaboost_0.csv',
-                  'results\\result_adaboost_0.csv',
-                  'results\\result_DIB2_0.csv')
+    friedman_test('results\\result_Adaboost.csv',
+                  'results\\result_DIB.csv',
+                  'results\\result_DIB2.csv')
