@@ -18,17 +18,17 @@ import toupee as tp
 import tensorflow as tf
 
 # constants
-PARAMS_FILE = r"C:\Users\ortal\PycharmProjects\Applied-Machine-Learning-Final-project\examples\experiments\cifar-100\adaboost.yaml"
-DATA_PATH = r'C:\Users\ortal\PycharmProjects\Applied-Machine-Learning-Final-project\datasets\cifar100'
-DATA_SIZE = 700
-OUT_DATA_PATH = r'C:\Users\ortal\PycharmProjects\Applied-Machine-Learning-Final-project\datasets\cifar100\fold'
+PARAMS_FILE = r"C:\Users\yszok\Desktop\Applied_Machine_Learning\project2\examples\experiments\cifar-10\DIB.yaml"
+DATA_PATH = r'C:\Users\yszok\Desktop\Applied_Machine_Learning\project2\datasets\cifar-10'
+DATA_SIZE = 100
+OUT_DATA_PATH = r'C:\Users\yszok\Desktop\Applied_Machine_Learning\project2\datasets\cifar-10\fold'
 
 
 def create_models():
     model_arr = []
     dib_model = create_model(PARAMS_FILE) # give parameters
     params_dib_model = {}
-    model_arr.append(('DIB', (dib_model, params_dib_model)))
+    model_arr.append(('DIB2', (dib_model, params_dib_model)))
 
     clf = AdaBoostClassifier()
     param_clf = {
@@ -195,7 +195,7 @@ def _load_npz(filename: str, convert_labels_to_one_hot=False) -> tuple:
 
 
 def main_npz_files():
-    algorithm_name = "adaboost"
+    algorithm_name = "DIB"
     # load all data
     test_data = _load_npz(DATA_PATH+r'\test.npz')
     train_data = _load_npz(DATA_PATH + r'\train.npz')

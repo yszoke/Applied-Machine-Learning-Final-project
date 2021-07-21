@@ -4,7 +4,7 @@
 dataset: ../datasets/cifar-10/fold/
 data_format: npz
 convert_labels_to_one_hot: true
-model_file: ../examples/experiments/cifar-10/all-cnn.model
+model_file: ../examples/experiments/cifar-10/densenet201.model
 reduce_lr_on_plateau:
   factor: 0.1
   patience: 5
@@ -49,7 +49,7 @@ img_gen_params:
 
 ## Ensemble Parameters ##
 ensemble_method:
-  class_name: DIB
+  class_name: DIB2
   params:
     subsequent_epochs: 10
     insert_after: activation_4

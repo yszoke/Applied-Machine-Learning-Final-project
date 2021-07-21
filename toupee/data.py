@@ -39,7 +39,7 @@ def get_data_format(filename: str) -> str:
 
 def one_hot_numpy(dataset):
     """ Convert a numpy array of Y labels into one-hot encodings """
-    n_classes = 100#dataset.max() + 1
+    n_classes = 10#dataset.max() + 1
     return np.eye(n_classes)[dataset.reshape(-1)]
 
 def _load_h5(filename, **kwargs):

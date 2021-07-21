@@ -47,7 +47,7 @@ def download_mnist() -> dict:
 
 
 MAPPING = {
-    'cifar10': download_cifar10,
+    'cifar-10': download_cifar10,
     'cifar-10': download_cifar10,
     'cifar100': download_cifar100,
     'cifar-100': download_cifar100,

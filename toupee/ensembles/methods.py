@@ -310,3 +310,66 @@ class DIB(DynamicMembers):
             model.fit(self.data, self.subsequent_epochs, log_wandb=self.wandb)
         else:
             model.fit(self.data, log_wandb=self.wandb)
+
+class DIB2(DynamicMembers):
+    """
+    Deep Incremental Boosting ()
+    """
+    #3
+    def __init__(self, subsequent_epochs, insert_after, new_layers, variant='M1', **kwargs):
+        super().__init__(aggregator='averaging', **kwargs)
+        self.subsequent_epochs = subsequent_epochs
+        self.new_layers = new_layers
+        self.insert_after = insert_after
+        self.variant = variant
+        self.sample_weights = np.ones(self.data.size['train']) / float(self.data.size['train'])
+        self.model_weights = np.ones(self.size)
+
+    def _on_model_end(self):
+        """ Default callback when a model finishes training """
+        model = self._fit_loop_info['current_model']
+        y_true = []
+        y_pred_p = []
+        for (x, y_true_batch) in self.data.get_training_handle(resample=False):
+            y_true.append(np.argmax(y_true_batch, axis=1))
+            y_pred_p.append(model.predict_proba(x))
+        y_true = np.concatenate(y_true)
+        y_pred_p = np.concatenate(y_pred_p)
+        y_pred = np.argmax(y_pred_p, axis=1)
+        if self.variant == 'MA':
+            y_pred_weights = np.max(y_pred_p, axis=1)
+        else:
+            y_pred_weights = 1.
+        errors = (y_true == y_pred).astype('int32')
+        e = np.sum(errors * self.sample_weights * y_pred_weights)
+        alpha = 0
+        if e > 0:
+            alpha = .5 * math.log((1-e)/2) + math.log(self.data.n_classes-1)
+            unnorm_weights = np.where(errors == 1,
+                                      self.sample_weights * math.exp(alpha),
+                                      self.sample_weights * math.exp(-alpha)
+                                    )
+            self.sample_weights = unnorm_weights / unnorm_weights.sum()
+        self.data.set_weights(self.sample_weights)
+        self.model_weights[self._fit_loop_info['current_step']] = alpha
+
+    def _on_model_start(self):
+        """ Default callback when a model starts training """
+        self.data = self.data.resample()
+
+    def _members(self):
+        """ Generator that creates new members on the fly by making the previous member bigger """
+        for _ in range(self.size):
+            new_member = self.model_factory(params=self.model_params)
+            if self.members:
+                new_member.inject_layers(self.new_layers, self.insert_after)
+                new_member.copy_weights(self.members[-1])
+            self.members.append(new_member)
+            yield new_member
+
+    def _fit_call(self, model):
+        """ Wrapper for calling the model fitting """
+        if self._fit_loop_info['current_step'] > 0:
+            model.fit(self.data, self.subsequent_epochs, log_wandb=self.wandb)
+        else:
+            model.fit(self.data, log_wandb=self.wandb)

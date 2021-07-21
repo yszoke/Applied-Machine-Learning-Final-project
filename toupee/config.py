@@ -51,7 +51,7 @@ Loader.add_constructor('!include', Loader.include)
 def load_parameters(filename: str) -> parameters.Parameters:
     """ Loads a parameters file """
     with open(filename) as f:
-        r = yaml.load(f, Loader=yaml.FullLoader)
+        r = yaml.load(f)
     for d in defaults:
         if d not in r:
             r[d] = defaults[d]
